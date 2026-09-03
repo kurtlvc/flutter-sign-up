@@ -1,4 +1,18 @@
+/**
+ * Sign-up screen design flutter application for ITP107 - Mobile Application Development
+ * 7 Different Flutter Widgets:
+ * 1. Text Field - Username, Email and Password
+ * 2. Image - Binbows from https://www.deviantart.com/goukai/art/Michaelsoft-Binbows-176728443
+ * 3. Dropdown - Region Selection
+ * 4. Container - Padding and Styling
+ * 5. Card - Outlined Card for Form
+ * 6. Elevated Button - Submit Button
+ * 7. Gesture Detector - Detects Double Tap and Long Press
+ */
+
 import 'package:flutter/material.dart';
+
+const List<String> regionList = <String>['Philippines (PH)', 'Japan (JP)', 'United States (US)', 'Spain (ES)'];
 
 void main() {
   runApp(const MyApp());
@@ -11,111 +25,204 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Sign Up',
       theme: ThemeData(
         // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.deepOrange,
+          primary: Colors.deepOrange,
+          secondary: Colors.deepOrangeAccent,
+          ),
+        fontFamily: 'Roboto',
+        textTheme: const TextTheme(
+          displayMedium: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+          bodyLarge: TextStyle(fontSize: 16.0),
+          bodyMedium: TextStyle(fontSize: 14.0),
+        ),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const SignUpPage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+class SignUpPage extends StatelessWidget {
+  const SignUpPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: const Text('Sign Up'),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: .center,
-          children: [
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+      body: const Center(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(16.0),
+          child: SignUpForm(),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+    );
+  }
+}
+
+class SignUpForm extends StatefulWidget {
+  const SignUpForm({super.key});
+
+  @override
+  _SignUpFormState createState() => _SignUpFormState();
+}
+
+class _SignUpFormState extends State<SignUpForm> {
+// == Form Data ==
+  final _formKey = GlobalKey<FormState>();
+  String _username = '';
+  String _email = '';
+  String _password = '';
+  String _buttonText = "Click Me";
+  String _selectedRegion = regionList.first;
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _formKey,
+      //  == Form Card ==
+      child: Card.outlined(
+        //  == Container with Padding ==
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.75,
+          padding: const EdgeInsets.all(16.0),
+          // == Column with Contents =
+          child: Column(
+            children: [
+              // == Image Logo ==
+              Image.asset(
+                'assets/images/logo.png',
+                width: 200,
+              ),
+              // == Space ==
+              SizedBox(height: 16),
+              // == Text Components ==
+              Text(
+                'Create an Account',
+                style: Theme.of(context).textTheme.displayMedium,
+              ),
+              Text(
+                'Sign up to get started!',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+              SizedBox(height: 16),
+              // == Form Widgets ==
+              // Username Form
+              TextFormField(
+                decoration: const InputDecoration(
+                  icon: Icon(Icons.person),
+                  hintText: 'Enter your username',
+                  labelText: 'Username *'),
+                onSaved: (String? value) {
+                  _username = value!;
+                },
+                validator: (String? value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your username';
+                  }
+                  return null;
+                },
+              ),
+              // Email Form
+              TextFormField(
+                decoration: const InputDecoration(
+                  icon: Icon(Icons.email),
+                  hintText: 'Enter your email',
+                  labelText: 'Email *'),
+                onSaved: (String? value) {
+                  _email = value!;
+                },
+                validator: (String? value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your email';
+                  } else if (!value.contains('@') || !value.contains('.')) {
+                    return 'Please enter a valid email';
+                  }
+                  return null;
+                },
+              ),
+              // Password Form
+              TextFormField(
+                decoration: const InputDecoration(
+                  icon: Icon(Icons.lock),
+                  hintText: 'Enter your password',
+                  labelText: 'Confirm Password *',
+                ),
+                obscureText: true,
+                onSaved: (value) {
+                  _password = value!;
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your password';
+                  } else if (value.length < 3) {
+                    return 'Password should be at least 3 characters long';
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 16),
+              // Account Region Selection
+              DropdownMenu<String>(
+                label: const Text('Select Account Region'),
+                width: MediaQuery.of(context).size.width * 0.75,
+                initialSelection: regionList.first,
+                onSelected: (String? value) {
+                  // Handle region selection change
+                  setState(() {
+                    _selectedRegion = value ?? regionList.first;
+                  });
+                },
+                dropdownMenuEntries: regionList.map((String region) {
+                  return DropdownMenuEntry(value: region, label: region);
+                }).toList(),
+              ),
+
+              SizedBox(height: 16),
+              // GestureDetector with ElevatedButton with multiple behaviors and logging
+              GestureDetector(
+                onDoubleTap: () {
+                  // Set button text
+                  setState(() {
+                    _buttonText = "ITP107 - Mobile Application Development";
+                  });
+                  // Debug console log
+                  print("[DEBUG] Button text changed: $_buttonText");
+                },
+                onLongPress: () {
+                  setState(() {
+                    _buttonText = "Kurt Lawrence V. Cabrera";
+                  });
+                  print("[DEBUG] Button text changed to: $_buttonText");
+                },
+                child: Container(
+                  // color: Theme.of(context).colorScheme.inversePrimary,
+                  padding: const EdgeInsets.all(8),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        _formKey.currentState!.save();
+                        // Successful sign-in
+                        print("[DEBUG] User signed up - Username: $_username, Email: $_email, Password: $_password, Region: $_selectedRegion");
+                      }
+                      setState(() {
+                        _buttonText = "Hello World!";
+                      });
+
+                      print("[DEBUG] Button text changed to: $_buttonText");
+                    },
+                    child: Text(_buttonText),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
