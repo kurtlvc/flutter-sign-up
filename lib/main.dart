@@ -1,4 +1,10 @@
 /**
+ * Repository
+ * https://github.com/kurtlvc/flutter-sign-up
+ * 
+ * Github Pages Preview
+ * https://kurtlvc.github.io/flutter-sign-up/
+ * 
  * Sign-up screen design flutter application for ITP107 - Mobile Application Development
  * 7 Different Flutter Widgets:
  * 1. Text Field - Username, Email and Password
@@ -202,6 +208,7 @@ class _SignUpFormState extends State<SignUpForm> {
                 },
                 child: Container(
                   // color: Theme.of(context).colorScheme.inversePrimary,
+                  width: MediaQuery.of(context).size.width * 1,
                   padding: const EdgeInsets.all(8),
                   child: ElevatedButton(
                     onPressed: () {
